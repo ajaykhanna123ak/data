@@ -1,60 +1,67 @@
-import logging
 import memory_profiler
-import asyncio
-from functools import wraps
-
 import logging
+import asyncio
+import json
 
-# root_logger = logging.getLogger()
-# if not root_logger.handlers:
-#     handler = logging.StreamHandler()  # Add a default handler if none exist
-#     root_logger.addHandler(handler)
+# Configure logger
+_logger = logging.getLogger("memory_profiler")
+logging.basicConfig(level=logging.INFO)
 
-# root_logger.handlers[0].setFormatter(logging.Formatter("%(name)s: %(message)s"))
-# profiler_logstream = memory_profiler.LogFile('memory_profiler_logs', True)
+profiler_logstream = memory_profiler.LogFile("memory_profiler_logs", True)
 
-def memory_profiler_wrapper(func):
-    """Decorator to apply memory profiling and logging for both sync & async functions."""
-    profiled_func = memory_profiler.profile(func)  # Apply memory profiling
+async def memory_profiled_async(func):
+    """Decorator for profiling async functions with manual control."""
+    async def wrapper(*args, **kwargs):
+        profiler = memory_profiler.Profile()
+        profiler.enable()  # Start memory profiling
+        _logger.info(f"Profiling started for {func.__name__}")
+        
+        result = await func(*args, **kwargs)  # Execute async function
+        
+        profiler.disable()  # Stop profiling
+        memory_profiler.show_results(profiler, stream=profiler_logstream)  # Print results
+        profiler_logstream.flush()  # Ensure logs are written
+        _logger.info(f"Profiling completed for {func.__name__}")
+        
+        return result
+    return wrapper
 
-    if asyncio.iscoroutinefunction(func):  # Check if function is async
-        @wraps(func)
-        async def async_wrapper(*args, **kwargs):
-            print(f"Executing async function: {func.__name__}")
-            result = await profiled_func(*args, **kwargs)  # Await async function
-            print(f"Async function '{func.__name__}' execution completed.")
-            return result
-        return async_wrapper
+class Example:
+    @memory_profiled_async
+    async def run(self):
+        """Execute the PDF conversion process with OCR results."""
+        _logger.info("[create_searchable_pdf] Activity started")
+        
+        input_data = self.input
+        blob_name = None  # Initialize blob_name
+        
+        if input_data.converted_document_output and input_data.converted_document_output.blob_name:
+            blob_name = input_data.converted_document_output.blob_name
+        
+        if input_data.blob_reference.blob_name and not blob_name:
+            blob_name = input_data.blob_reference.blob_name
+        
+        updated_blob = input_data.blob_reference.copy()
+        updated_blob.blob_name = blob_name
+        
+        _logger.info("[create_searchable_pdf] Downloading blob content")
+        content = await updated_blob.download_content()
+        _logger.info("[create_searchable_pdf] Blob content downloaded")
+        
+        if not isinstance(content, bytes):
+            raise ValueError("PDF content must be of type bytes.")
+        
+        # Prepare form-data payload
+        json_data = json.dumps(input_data.form_recognizer_result.dict())
+        files = {
+            "file": ("file", content, "application/octet-stream"),
+            "data": ("fr_results", json_data, "application/json"),
+        }
+        
+        _logger.info("[create_searchable_pdf] HTTPX files created")
 
-    else:  # Handle synchronous function
-        @wraps(func)
-        def sync_wrapper(*args, **kwargs):
-            print(f"Executing function: {func.__name__}")
-            result = profiled_func(*args, **kwargs)  # Execute sync function
-            print("Function '{func.__name__}' execution completed.")
-            return result
-        return sync_wrapper
+        return blob_name  # Return something useful
 
-# Example Synchronous Function
-@memory_profiler_wrapper
-def sync_example():
-    """A sample sync function."""
-    data = [i for i in range(100000)]  # Allocate memory
-    return sum(data)
-
-# Example Asynchronous Function
-@memory_profiler_wrapper
-async def async_example():
-    """A sample async function."""
-    await asyncio.sleep(1)  # Simulate async task
-    data = [i for i in range(100000)]  # Allocate memory
-    return sum(data)
-
-# Run both sync and async functions
-if __name__ == "__main__":
-    print("Running sync function...")
-    sync_result = sync_example()
-    print(f"Sync Result: {sync_result}")
-
-    print("Running async function...")
-    asyncio.run(async_example())  # Run async function in event loop
+# Example usage
+example = Example()
+asyncio.run(example.run())  # Run the async function
