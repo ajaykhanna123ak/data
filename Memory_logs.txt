@@ -1,0 +1,15 @@
+traces
+| where message startswith_cs "memory_profiler_logs"
+| parse message with "memory_profiler_logs: " LineNumber " " TotalMem_MiB " " IncreMem_MiB " " Occurrences " " Contents
+| extend TotalMemValue = todouble(TotalMem_MiB) 
+| where isnotnull(TotalMemValue)  // Filter out non-numeric values
+| summarize AvgMemUsage = avg(TotalMemValue) by LineNumber
+| join kind=inner (
+    traces
+    | where message startswith_cs "memory_profiler_logs: Filename "
+    | parse message with "memory_profiler_logs: Filename: " FileName
+    | project LineNumber, FileName
+) on LineNumber
+| summarize AvgMemUsage = avg(AvgMemUsage) by FileName, LineNumber
+| top 2 by AvgMemUsage by FileName  // Get top 2 lines per file
+| order by FileName, AvgMemUsage desc
