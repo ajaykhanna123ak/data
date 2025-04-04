@@ -11,5 +11,5 @@ traces
     | project LineNumber, FileName
 ) on LineNumber
 | summarize AvgMemUsage = avg(AvgMemUsage) by FileName, LineNumber
-| top 2 by AvgMemUsage by FileName  // Get top 2 lines per file
+| top 2 of AvgMemUsage by FileName  // Corrected syntax for selecting top 2 per file
 | order by FileName, AvgMemUsage desc
