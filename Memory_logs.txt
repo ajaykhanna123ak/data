@@ -1,5 +1,25 @@
 traces
 | where message startswith_cs "memory_profiler_logs"
+| parse message with "memory_profiler_logs: " LineNumber:string " " TotalMem_MiB " " IncreMem_MiB " " Occurrences " " Contents
+| extend TotalMemValue = todouble(TotalMem_MiB)
+| where isnotnull(TotalMemValue)  // Filter out non-numeric values
+| summarize AvgMemUsage = avg(TotalMemValue) by tostring(LineNumber)  // Ensure LineNumber is treated as string
+| join kind=inner (
+    traces
+    | where message startswith_cs "memory_profiler_logs: Filename "
+    | parse message with "memory_profiler_logs: Filename: " FileName
+    | project FileName
+) on $left.LineNumber == $right.FileName  // Ensure proper join condition
+| summarize AvgMemUsage = avg(AvgMemUsage) by FileName, LineNumber
+| top 2 of AvgMemUsage by FileName
+| order by FileName, AvgMemUsage desc
+
+
+
+
+
+traces
+| where message startswith_cs "memory_profiler_logs"
 | parse message with "memory_profiler_logs: " LineNumber " " TotalMem_MiB " " IncreMem_MiB " " Occurrences " " Contents
 | extend TotalMemValue = todouble(TotalMem_MiB) 
 | where isnotnull(TotalMemValue)  // Filter out non-numeric values
