@@ -209,3 +209,26 @@ https://www.servicenow.com/now-platform/workflow-data-fabric.html
 https://www.servicenow.com/docs/bundle/vancouver-integrate-applications/page/administer/flow-designer/concept/subscription-usage.html
 
 https://www.servicenow.com/content/dam/servicenow-assets/public/en-us/doc-type/legal/snc-addendum-integrationhub.pdf
+
+
+Starter Pack: Free, up to 1M transactions/year.
+
+Professional Tier: ~$113,808 to $128,195 CAD per license.
+
+Enterprise Tier: Custom pricing, typically $160,000+ USD annually.
+
+
+Workflow Data Fabric Licensing:
+
+Based on data volume, complexity, and feature requirements.
+
+Requires direct engagement with ServiceNow or resellers for accurate pricing.
+
+
+Additional Cost Considerations:
+
+Transaction-based pricing.
+
+Customization and maintenance overhead.
+
+Training and premium support services.
