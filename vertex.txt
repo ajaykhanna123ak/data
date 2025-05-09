@@ -1,0 +1,15 @@
+Dockerized App Logs Errors
+
+Logs → Cloud Logging → Pub/Sub
+
+Pub/Sub → Dataflow → Transformed logs → BigQuery
+
+Vertex AI uses logs from BigQuery to train a model to detect failures
+
+Model deployed to Vertex AI endpoint
+
+Real-time logs → Vertex AI endpoint → Predict issue
+
+Cloud Function triggers auto-repair (e.g., restart pod)
+
+Alert sent via Ops Suite + shown in dashboard
