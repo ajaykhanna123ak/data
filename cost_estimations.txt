@@ -7,4 +7,16 @@
 | **Grafana (hosted on GCE)**                  | \$15 (single VM instance)           | \$50 (HA deployment or Managed Grafana)   | GCE instance (\~\$10/month) vs Managed Grafana or 3-node HA setup                                                |
 | **Cloud Functions (Auto-recovery triggers)** | \$10 (few invocations)              | \$40 (frequent, aggressive triggers)      | 2 million invocations free; after that \~\$0.40/million + execution time                                         |
 | **Cloud Monitoring + Alerts**                | Free Tier or <\$5                   | \$20+                                     | High alert volume increases cost; custom metrics are billed (\~\$0.10/MB)                                        |
-| **GKE / Cloud Run (Restart logic)**          | \$30 (basic pod restart)            | \$100+ (autoscaling, HA nodes)            | GKE charges \~\$0.10/hour/node + egress; Cloud Run scales based on concurrency                                   |
+| **GKE / Cloud Run (Restart logic)**          | \$30 (basic pod restart)            | \$100+ (autoscaling, HA nodes)            | GKE charges \~\$0.10/hour/node + egress; Cloud Run scales based on concurrency 
+
+
+
+| **Category**      | **Cost-Effective Approach** | **Efficient Approach**                  |
+| ----------------- | --------------------------- | --------------------------------------- |
+| Inference         | Batch predictions           | Real-time Vertex AI online predictions  |
+| Monitoring        | Limited alerting            | Aggressive, proactive monitoring        |
+| Data Processing   | Scheduled ETL               | Streaming Dataflow pipelines            |
+| Dashboard Refresh | Daily or manual             | Real-time/5 min intervals               |
+| Automation        | Limited to major issues     | Autonomic, high-frequency restart logic |
+| Model Type        | Smaller AutoML model        | Large custom-trained model              |
+
