@@ -1,0 +1,9 @@
+Component,Cost-Effective (Monthly),Efficient (Monthly),Reason for Cost
+Cloud Logging + Export to Pub/Sub,$10 (10 GB logs/month),$50 (50 GB logs/month),$0.50/GB logs; higher for longer retention
+Pub/Sub + Dataflow / Cloud Functions,$20 (batch via Cloud Function),$100 (real-time Dataflow),Batch cheaper; Dataflow incurs vCPU charges
+Vertex AI (Model Training + Prediction),"$50 (batch inference, small model)","$150+ (real-time inference, large model)",Online prediction is costlier than batch
+BigQuery (Storage + Queries),"$20 (10 GB, 100 queries)","$100 (50+ GB, frequent queries)",More storage + frequent queries = more cost
+Grafana (hosted on GCE),$15 (single VM instance),$50 (HA or Managed Grafana),Self-hosted cheaper than managed service
+Cloud Functions (Auto-recovery triggers),$10 (few invocations),"$40 (frequent, aggressive triggers)",Free up to 2M; more invocations cost more
+Cloud Monitoring + Alerts,Free Tier or <$5,$20+,Custom metrics/alerts can add cost
+GKE / Cloud Run (Restart logic),$30 (basic pod restart),"$100+ (autoscaling, HA nodes)",HA setups and autoscaling increase cost
