@@ -2,31 +2,38 @@ from line_profiler import LineProfiler
 import functools
 import io
 import logging
+import asyncio
 
-# Setup logging (Azure streams stdout/stderr to Log Stream and App Insights)
 logger = logging.getLogger("cpu_profiler")
-logger.setLevel(logging.INFO)  # Azure listens to INFO level by default
+logger.setLevel(logging.INFO)
 
 class cpu_percent:
-    @staticmethod
-    def get_cpu_usage():
+    def get_cpu_usage(self):
         def decorator(func):
-            @functools.wraps(func)
-            def wrapper(*args, **kwargs):
-                profiler = LineProfiler()
-                profiler.add_function(func)
-
-                result = profiler(func)(*args, **kwargs)
-
-                # Capture profiler output
-                output_stream = io.StringIO()
-                profiler.print_stats(stream=output_stream)
-                output = output_stream.getvalue()
-
-                # Send line-by-line to Azure logs
-                for line in output.splitlines():
-                    logger.info(line)
-
-                return result
-            return wrapper
+            if asyncio.iscoroutinefunction(func):
+                @functools.wraps(func)
+                async def async_wrapper(*args, **kwargs):
+                    profiler = LineProfiler()
+                    profiler.add_function(func)
+                    result = await profiler(func)(*args, **kwargs)
+                    output_stream = io.StringIO()
+                    profiler.print_stats(stream=output_stream)
+                    output = output_stream.getvalue()
+                    for line in output.splitlines():
+                        logger.info(line)
+                    return result
+                return async_wrapper
+            else:
+                @functools.wraps(func)
+                def sync_wrapper(*args, **kwargs):
+                    profiler = LineProfiler()
+                    profiler.add_function(func)
+                    result = profiler(func)(*args, **kwargs)
+                    output_stream = io.StringIO()
+                    profiler.print_stats(stream=output_stream)
+                    output = output_stream.getvalue()
+                    for line in output.splitlines():
+                        logger.info(line)
+                    return result
+                return sync_wrapper
         return decorator
