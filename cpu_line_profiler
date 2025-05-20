@@ -3,37 +3,48 @@ import functools
 import io
 import logging
 import asyncio
-
-logger = logging.getLogger("cpu_profiler")
-logger.setLevel(logging.INFO)
+import sys
 
 class cpu_percent:
-    def get_cpu_usage(self):
-        def decorator(func):
-            if asyncio.iscoroutinefunction(func):
-                @functools.wraps(func)
-                async def async_wrapper(*args, **kwargs):
-                    profiler = LineProfiler()
-                    profiler.add_function(func)
-                    result = await profiler(func)(*args, **kwargs)
-                    output_stream = io.StringIO()
-                    profiler.print_stats(stream=output_stream)
-                    output = output_stream.getvalue()
-                    for line in output.splitlines():
-                        logger.info(line)
-                    return result
-                return async_wrapper
-            else:
-                @functools.wraps(func)
-                def sync_wrapper(*args, **kwargs):
-                    profiler = LineProfiler()
-                    profiler.add_function(func)
-                    result = profiler(func)(*args, **kwargs)
-                    output_stream = io.StringIO()
-                    profiler.print_stats(stream=output_stream)
-                    output = output_stream.getvalue()
-                    for line in output.splitlines():
-                        logger.info(line)
-                    return result
-                return sync_wrapper
-        return decorator
+    def __init__(self, log_stream=None):
+        self.log_stream = log_stream or sys.stdout  # Default to stdout
+
+        # Configure logger
+        self.logger = logging.getLogger("cpu_profiler")
+        self.logger.setLevel(logging.INFO)
+        handler = logging.StreamHandler(self.log_stream)
+        handler.setFormatter(logging.Formatter("%(message)s"))
+
+        # Avoid duplicate handlers
+        if not any(isinstance(h, logging.StreamHandler) and h.stream == self.log_stream for h in self.logger.handlers):
+            self.logger.addHandler(handler)
+
+    def __call__(self, func):
+        if asyncio.iscoroutinefunction(func):
+            @functools.wraps(func)
+            async def async_wrapper(*args, **kwargs):
+                profiler = LineProfiler()
+                profiler.add_function(func)
+                result = await profiler(func)(*args, **kwargs)
+
+                output_stream = io.StringIO()
+                profiler.print_stats(stream=output_stream)
+                output = output_stream.getvalue()
+                for line in output.splitlines():
+                    self.logger.info(line)
+                return result
+            return async_wrapper
+        else:
+            @functools.wraps(func)
+            def sync_wrapper(*args, **kwargs):
+                profiler = LineProfiler()
+                profiler.add_function(func)
+                result = profiler(func)(*args, **kwargs)
+
+                output_stream = io.StringIO()
+                profiler.print_stats(stream=output_stream)
+                output = output_stream.getvalue()
+                for line in output.splitlines():
+                    self.logger.info(line)
+                return result
+            return sync_wrapper
