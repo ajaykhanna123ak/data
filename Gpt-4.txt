@@ -1,0 +1,41 @@
+Thanks for the image — it clearly shows the official Azure pricing for GPT-4o Mini in the East US region as of April 2025.
+
+Here’s the correct updated pricing from the image:
+
+
+---
+
+📌 GPT-4o Mini (o4-mini) – Pay-as-you-go Pricing (per 1M tokens)
+
+Input: $0.25 per 1M tokens
+
+Output: $1.25 per 1M tokens
+
+
+
+---
+
+🧮 Recalculating Your Hourly and Monthly Cost
+
+✅ Hourly Usage:
+
+Input: 17.89M tokens × $0.25 = $4.4725
+
+Output: 10.21M tokens × $1.25 = $12.7625
+
+Total per hour = $4.4725 + $12.7625 = $17.235
+
+
+
+---
+
+📅 Monthly Cost (30 Days, 24/7 Usage):
+
+$17.235/hour × 24 hours/day × 30 days/month
+= $12,408.60 per month
+
+
+
+---
+
+Let me know if you'd like the cost with Batch API pricing (which is usually discounted) or want to model for part-time or on-demand usage instead of continuous 24/7.
