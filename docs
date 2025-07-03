@@ -1,0 +1,35 @@
+# 📦 Installing a Private GitHub Repository Using pip
+
+This guide explains how to install a **private GitHub repository** using `pip` with a GitHub **Personal Access Token (PAT)**.
+
+---
+
+## ✅ Step 1: Generate a GitHub Token
+
+1. Visit: [https://github.com/settings/tokens](https://github.com/settings/tokens)
+2. Click **"Generate new token"**:
+   - Use **"Fine-grained token"** (recommended) or **"Classic token"**.
+3. Add a **name** and set **expiration**.
+4. Set appropriate **permissions**:
+   - For **classic tokens**: enable the `repo` scope.
+   - For **fine-grained tokens**:
+     - Choose the specific repository.
+     - Enable **read-only** access to **Contents**.
+5. Click **Generate token**.
+6. **Copy the token** immediately. You won’t be able to see it again.
+
+---
+
+## 🔐 Step 2: Install the Private Repo Using pip
+
+Use the following command, replacing values accordingly:
+
+```bash
+pip install git+https://<TOKEN>@github.com/<username>/<repo-name>.git
+
+pip install git+https://ghp_abc123TOKEN@github.com/myusername/my-private-repo.git
+
+
+export GITHUB_TOKEN=ghp_abc123TOKEN
+pip install git+https://${GITHUB_TOKEN}@github.com/<username>/<repo-name>.git
+
