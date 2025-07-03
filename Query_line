@@ -1,0 +1,9 @@
+AppTraces
+| where Message matches regex @"^\s*\d+\s+\d+\s+\d+\s+\d+\.\d+\s+\d+\.\d+"
+| parse Message
+      with Line:int " " Hits:int " " Time_us:int " " PerHit_us:real " " PctTime:real " " CodeText:*
+| extend 
+      Time_ms = Time_us / 1000.0,
+      PerHit_ms = PerHit_us / 1000.0
+| project TimeGenerated, Line, Hits, Time_ms, PerHit_ms, PctTime, CodeText
+| order by TimeGenerated desc, PctTime desc
