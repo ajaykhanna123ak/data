@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAM & Cloud Governance: An Infographic Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC; 
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #0A9396, #005F73);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #CA6702;
+            font-size: 2rem;
+            font-weight: bold;
+            transform: rotate(90deg);
+        }
+        @media (min-width: 1024px) {
+            .flow-arrow {
+                transform: rotate(0deg);
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 gradient-text">IAM & Cloud Governance</h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">A visual guide to controlling **who** can do **what** on **which resources** in the cloud, all guided by the Principle of Least Privilege.</p>
+        </header>
+
+        <section id="pillars" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-12 text-[#005F73]">The Four Pillars of IAM</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-6xl mb-4">👤</div>
+                    <h3 class="text-xl font-bold text-[#0A9396] mb-2">Users</h3>
+                    <p class="text-gray-600 text-sm">An identity for a single person or application with permanent credentials (passwords or access keys). By default, a new user has zero permissions.</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-6xl mb-4">👥</div>
+                    <h3 class="text-xl font-bold text-[#0A9396] mb-2">Groups</h3>
+                    <p class="text-gray-600 text-sm">A collection of users. Permissions are attached to the group, and all users within it inherit them, simplifying management at scale.</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-6xl mb-4">📄</div>
+                    <h3 class="text-xl font-bold text-[#0A9396] mb-2">Policies</h3>
+                    <p class="text-gray-600 text-sm">The "rulebook" of IAM. A JSON document defining permissions with an `Effect` (Allow/Deny), `Action`, and `Resource`.</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center transform hover:scale-105 transition-transform duration-300">
+                    <div class="text-6xl mb-4">🎭</div>
+                    <h3 class="text-xl font-bold text-[#0A9396] mb-2">Roles</h3>
+                    <p class="text-gray-600 text-sm">An identity with temporary credentials that can be *assumed* by a trusted user or service. The most secure way to delegate permissions.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="flow" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-12 text-[#005F73]">How It All Connects</h2>
+             <div class="bg-white rounded-xl shadow-lg p-8">
+                <div class="flex flex-col lg:flex-row items-center justify-around space-y-8 lg:space-y-0 lg:space-x-4">
+                    <div class="text-center">
+                        <div class="text-5xl">👤</div>
+                        <p class="font-semibold mt-2">User</p>
+                    </div>
+                    <div class="flow-arrow">&rarr;</div>
+                    <div class="text-center">
+                        <div class="text-5xl">👥</div>
+                        <p class="font-semibold mt-2">Added to Group</p>
+                    </div>
+                    <div class="flow-arrow">&rarr;</div>
+                    <div class="text-center">
+                         <div class="text-5xl">📄</div>
+                        <p class="font-semibold mt-2">Policy on Group</p>
+                    </div>
+                     <div class="flow-arrow">&rarr;</div>
+                    <div class="text-center">
+                        <div class="text-5xl">💻</div>
+                        <p class="font-semibold mt-2">Access to Resource</p>
+                    </div>
+                </div>
+                <p class="text-center text-gray-600 mt-8">This flow demonstrates how permissions are inherited. A user gains the permissions defined in the policy that is attached to their group, granting them specific access to a cloud resource.</p>
+            </div>
+        </section>
+
+        <section id="governance" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-12 text-[#005F73]">Advanced Governance & Security</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-[#0A9396] mb-4">Privileged Access Management (PAM)</h3>
+                    <p class="text-gray-600 text-sm mb-4">PAM is a critical cybersecurity strategy focused on securing administrator and other "privileged" accounts. These accounts are the primary target for attackers.</p>
+                    <div class="chart-container">
+                        <canvas id="pamChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-2">Illustrative data showing the high percentage of breaches involving compromised privileged credentials.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                     <h3 class="text-xl font-bold text-[#0A9396] mb-4">IAM Policy Analyzer</h3>
+                    <p class="text-gray-600 text-sm mb-6">An automated tool that acts as a security expert, scanning policies to find misconfigurations and unintended public access before they can be exploited.</p>
+                    <div class="flex items-center justify-around bg-gray-50 p-4 rounded-lg">
+                        <div class="text-5xl">📄</div>
+                        <div class="text-4xl text-[#CA6702]">&rarr;</div>
+                        <div class="text-5xl">🔍</div>
+                        <div class="text-4xl text-[#CA6702]">&rarr;</div>
+                        <div class="text-5xl text-green-500">✅</div>
+                    </div>
+                     <p class="text-center text-sm text-gray-600 mt-4">Analyzes policies to ensure they are secure and correctly configured.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 md:col-span-2">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div>
+                            <h3 class="text-xl font-bold text-[#0A9396] mb-2">Service Accounts</h3>
+                            <p class="text-gray-600 text-sm">Non-human identities for applications and automation. Best practice is to assign them to IAM Roles for temporary, secure credentials.</p>
+                        </div>
+                         <div>
+                            <h3 class="text-xl font-bold text-[#0A9396] mb-2">Labels (or Tags)</h3>
+                            <p class="text-gray-600 text-sm">Key-value metadata for organizing resources, enabling cost allocation, and automating tasks. Example:</p>
+                            <code class="text-sm bg-blue-100 text-[#005F73] p-1 rounded">env:production</code>
+                        </div>
+                         <div>
+                            <h3 class="text-xl font-bold text-[#0A9396] mb-2">Organization Policies</h3>
+                            <p class="text-gray-600 text-sm">Centralized "guardrails" that restrict resource configurations (e.g., limit server locations) to enforce compliance for everyone.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison">
+            <h2 class="text-3xl font-bold text-center mb-12 text-[#005F73]">IAM vs. Organization Policies</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-8 max-w-4xl mx-auto">
+                 <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-[#EE9B00] mb-4 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-2">IAM Policies</h3>
+                    <p class="text-gray-700 text-lg">Control <span class="font-bold text-[#BB3E03]">WHO</span> can do <span class="font-bold text-[#BB3E03]">WHAT</span>.</p>
+                    <p class="text-gray-600 mt-2">Focuses on user and service permissions.</p>
+                </div>
+                 <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-[#0A9396]">
+                    <h3 class="text-2xl font-bold mb-2">Organization Policies</h3>
+                    <p class="text-gray-700 text-lg">Control <span class="font-bold text-[#005F73]">WHAT</span> is allowed to <span class="font-bold text-[#005F73]">EXIST</span>.</p>
+                    <p class="text-gray-600 mt-2">Focuses on resource configuration and compliance guardrails.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+<script>
+    function wrapLabels(label) {
+        if (typeof label !== 'string' || label.length <= 16) {
+            return label;
+        }
+        const words = label.split(' ');
+        let lines = [];
+        let currentLine = '';
+        words.forEach(word => {
+            if ((currentLine + ' ' + word).trim().length > 16) {
+                lines.push(currentLine.trim());
+                currentLine = word;
+            } else {
+                currentLine = (currentLine + ' ' + word).trim();
+            }
+        });
+        if (currentLine) {
+            lines.push(currentLine.trim());
+        }
+        return lines;
+    }
+
+    const pamChartCtx = document.getElementById('pamChart').getContext('2d');
+    const pamChartLabels = ['Breaches via Privileged Accounts', 'Other Causes'].map(wrapLabels);
+    
+    new Chart(pamChartCtx, {
+        type: 'doughnut',
+        data: {
+            labels: pamChartLabels,
+            datasets: [{
+                label: 'Breach Causes',
+                data: [80, 20],
+                backgroundColor: [
+                    '#AE2012', 
+                    '#94D2BD' 
+                ],
+                borderColor: '#FFFFFF',
+                borderWidth: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                         boxWidth: 20
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            } else {
+                              return label;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
